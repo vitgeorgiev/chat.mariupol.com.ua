@@ -186,6 +186,7 @@ wss.on('connection', (ws) => {
         channel,
         channelName: CHANNELS[channel],
         messages: getChannelHistory(channel),
+        users: getUsersInChannel(channel),
         prefs: {
           color,
           msgColor: normalizeColor(prefs.msgColor ?? color),

@@ -53,8 +53,8 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
-function renderSmileys(text) {
-  let result = escapeHtml(text);
+function applySmileys(html) {
+  let result = html;
   const sorted = [...SMILEYS].sort((a, b) => {
     const maxA = Math.max(...a.codes.map((c) => c.length));
     const maxB = Math.max(...b.codes.map((c) => c.length));
@@ -74,6 +74,10 @@ function renderSmileys(text) {
   return result;
 }
 
+function renderSmileys(text) {
+  return applySmileys(escapeHtml(text));
+}
+
 function renderSmileyList() {
   return SMILEYS.map(
     (s) =>
@@ -81,4 +85,4 @@ function renderSmileyList() {
   ).join('\n');
 }
 
-export { SMILEYS, renderSmileys, renderSmileyList };
+export { SMILEYS, applySmileys, escapeHtml, renderSmileys, renderSmileyList };

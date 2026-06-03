@@ -1,4 +1,4 @@
-import { renderSmileys } from './smileys.js';
+import { applySmileys, escapeHtml, renderSmileys } from './smileys.js';
 import { genderIcon, isCustomIcon, normalizeColor } from './color-cube.js';
 
 const CHANNEL_NAMES = {
@@ -45,6 +45,7 @@ document.getElementById('settings-link').href =
 
 let ws;
 let away = false;
+let channelUsers = [];
 
 const messagesEl = document.getElementById('messages');
 const usersEl = document.getElementById('users');
@@ -66,7 +67,9 @@ function connect() {
     if (data.type === 'history') {
       messagesEl.innerHTML = '';
       if (data.prefs) prefs = { ...prefs, ...data.prefs };
+      if (data.users) channelUsers = data.users.map((u) => u.name);
       data.messages.forEach((m) => addMessage(m));
+      if (data.users) updateUsers(data.users);
     }
     if (data.type === 'message') addMessage(data);
     if (data.type === 'whisper') addWhisper(data);
@@ -95,7 +98,7 @@ function addMessage({ time, nick, text, system, action, color: nickCol, msgColor
     row.innerHTML =
       `<span class="msg-bullet">•</span> ` +
       `<span class="${nameClass}"><a class="nick"${nickStyle} href="#" data-nick="${esc(nick)}">${esc(nick)}</a>:</span> ` +
-      `<span class="${textClass}"${textStyle}>${renderSmileys(text)}</span> ` +
+      `<span class="${textClass}"${textStyle} data-raw="${escAttr(text)}">${renderMessageText(text)}</span> ` +
       `<span class="time">(${esc(time)})</span>`;
     row.querySelector('.nick')?.addEventListener('click', (e) => {
       e.preventDefault();
@@ -134,6 +137,7 @@ function renderUserLine(u, dimmed) {
 }
 
 function updateUsers(users) {
+  channelUsers = users.map((u) => u.name);
   const active = users.filter((u) => !u.away);
   const absent = users.filter((u) => u.away);
 
@@ -142,6 +146,7 @@ function updateUsers(users) {
   awayHeaderEl.hidden = absent.length === 0;
 
   bindUserEvents();
+  refreshMentions();
 }
 
 function bindUserEvents() {
@@ -180,6 +185,35 @@ function esc(text) {
   const d = document.createElement('div');
   d.textContent = text;
   return d.innerHTML;
+}
+
+function escAttr(text) {
+  return esc(text).replace(/"/g, '&quot;');
+}
+
+function highlightNicks(html) {
+  if (!channelUsers.length) return html;
+  let result = html;
+  const sorted = [...channelUsers].sort((a, b) => b.length - a.length);
+  for (const nick of sorted) {
+    const reNick = nick.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`(${reNick})(,)`, 'gi');
+    result = result.replace(
+      re,
+      '<span class="msg-nick-mention">$1</span>,',
+    );
+  }
+  return result;
+}
+
+function renderMessageText(text) {
+  return applySmileys(highlightNicks(escapeHtml(text)));
+}
+
+function refreshMentions() {
+  document.querySelectorAll('.coltext[data-raw]').forEach((el) => {
+    el.innerHTML = renderMessageText(el.dataset.raw);
+  });
 }
 
 function sendMessage(e) {
