@@ -53,9 +53,9 @@
 <b>Войти в чат</b>
 <hr noshade size="1" color="000000">
 <table cellpadding="0" cellspacing="1" border="0" width="10%">
-<form name="login" action="/chat.html" method="get" id="login-form">
+<form name="login" id="login-form" action="/chat.html" method="get">
 <tr><td align="right" width="100%"><font size="-1">Логин:</font></td><td width="5" nowrap></td><td><input type="text" name="name" value="" size="20" class="chatInput" required></td></tr>
-<tr><td align="right"><font size="-1">Пароль:</font></td><td></td><td><input type="password" name="password" value="" size="20" class="chatInput"></td></tr>
+<tr><td align="right"><font size="-1">Пароль:</font></td><td></td><td><input type="password" name="password" value="" size="20" class="chatInput" required></td></tr>
 <tr><td align="right"><font size="-1">Канал:</font></td><td></td><td>
 <select name="channel" class="chatInput" style="width:100%;">
 <option value="28763">Городской сад</option>
@@ -65,7 +65,7 @@
 <option value="28776">(*) Закрытый канал</option>
 </select></td></tr>
 <tr><td colspan="2"></td><td><font size="-1"><input type="Submit" value="Войти" class="chatInput" style="width:100%;"></font></td></tr>
-<tr><td colspan="3"><font size="-1">Вход в чат производится в защищенном режиме</font></td></tr>
+<tr><td colspan="3"><font size="-1">Нет аккаунта? <a href="/register.html">Регистрация</a></font></td></tr>
 </form>
 </table>
 <br>
@@ -73,8 +73,10 @@
 <b>Инфа чатланина</b>
 <hr noshade size="1" color="000000">
 <table cellpadding="0" cellspacing="1" border="0" width="10%">
-<tr><td align="right" width="100%"><font size="-1">Ник:</font></td><td width="5" nowrap></td><td><input type="text" name="namecache" value="" size="20" class="chatInput"></td></tr>
-<tr><td colspan="2"></td><td><input type="button" value="Искать" class="chatInput" style="width:100%;" onclick="alert('Функция в разработке')"></td></tr>
+<form name="searchinfo" action="/profile.html" method="get">
+<tr><td align="right" width="100%"><font size="-1">Ник:</font></td><td width="5" nowrap></td><td><input type="text" name="name" value="" size="20" class="chatInput"></td></tr>
+<tr><td colspan="2"></td><td><input type="Submit" value="Искать" class="chatInput" style="width:100%;"></td></tr>
+</form>
 </table>
 <br>
 
@@ -127,7 +129,7 @@
 <!-- Правая колонка -->
 <td width="100%">
 <font size="-1">
-<nobr><a href="#" title="Новеньких берете? - Берем!">Регистрация</a></nobr>&nbsp;|
+<nobr><a href="/register.html" title="Новеньких берете? - Берем!">Регистрация</a></nobr>&nbsp;|
 <nobr><a href="#" title="Правила чата">Правила чата</a></nobr>&nbsp;|
 <nobr><a href="#" title="Логи действий модераторов">Просмотр логов</a></nobr>&nbsp;|
 <nobr><a href="#" title="Вести с полей">Новости чата</a></nobr>&nbsp;|
@@ -214,6 +216,8 @@ taylor_09<br>Tiesto<br>Tissot<br>wild_cherry<br>Willesa<br>Zidane<br>
 import { renderSmileyList } from '/js/smileys.js';
 document.getElementById('smiley-list').innerHTML = renderSmileyList();
 </script>
+
+<script type="module" src="/js/login.js"></script>
 
 </body>
 </html>

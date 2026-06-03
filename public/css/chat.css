@@ -1,0 +1,247 @@
+/* Internal chat — МГЧ layout (2000s) */
+
+body.chat-room {
+  margin: 0;
+  padding: 0;
+  background: #fff6d5;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ── */
+.chat-header {
+  background: #fff6d5;
+  border-bottom: 1px solid #e0c870;
+  flex-shrink: 0;
+  padding: 4px 6px;
+}
+
+.header-left {
+  vertical-align: top;
+  padding-right: 12px;
+}
+
+.mgch-logo {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.mgch-logo sup {
+  font-size: 10px;
+}
+
+.channel-switch {
+  margin-top: 2px;
+}
+
+.channel-switch select {
+  width: 160px;
+}
+
+.header-nav {
+  vertical-align: top;
+  line-height: 1.8;
+}
+
+.header-nav a {
+  color: #0000ff;
+  text-decoration: underline;
+  margin-right: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.header-nav a:hover {
+  color: #cc0000;
+}
+
+.header-nav a.active-away {
+  color: #cc0000;
+  font-weight: bold;
+}
+
+/* ── Main area ── */
+.chat-main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+  border-top: 1px solid #e0c870;
+}
+
+.chat-output {
+  flex: 1;
+  background: #fff6d5;
+  overflow-y: auto;
+  padding: 4px 8px;
+  border-right: 1px solid #e0c870;
+}
+
+.chat-output .msg-row {
+  margin-bottom: 1px;
+  line-height: 16px;
+}
+
+.chat-output .msg-bullet {
+  color: #666;
+}
+
+.chat-output .time {
+  font-size: 12px;
+  color: inherit;
+}
+
+.chat-output .colname {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.chat-output .colname a.nick {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.chat-output .colname a.nick:hover {
+  text-decoration: underline;
+}
+
+.chat-output .coltext {
+  font-size: 12px;
+}
+
+.chat-output .coltext-action,
+.chat-output .colname-action,
+.chat-output .colname-action a.nick {
+  font-style: italic;
+  font-weight: normal;
+}
+
+.chat-output .msg-system {
+  font-style: italic;
+  font-size: 12px;
+  color: #000;
+}
+
+.chat-output .msg-whisper {
+  font-style: italic;
+  color: #666;
+  font-size: 12px;
+}
+
+/* ── User list ── */
+.chat-names {
+  width: 240px;
+  flex-shrink: 0;
+  background: #fff6d5;
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+
+.chat-names .names-title {
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #e0c870;
+}
+
+.chat-names .user-line {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 1px 2px;
+  border-bottom: 1px solid #f0dfa0;
+  gap: 2px;
+}
+
+.chat-names .user-line .user-left {
+  flex-shrink: 0;
+}
+
+.chat-names .user-line .user-nick-wrap {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-names .user-line a.nick {
+  text-decoration: underline;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.chat-names .user-line .user-actions {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.chat-names .user-line .user-actions img {
+  vertical-align: middle;
+  cursor: pointer;
+  opacity: 0.85;
+  margin-left: 1px;
+}
+
+.chat-names .user-line .user-actions img:hover {
+  opacity: 1;
+}
+
+.chat-names .user-away a.nick {
+  opacity: 0.5;
+}
+
+.chat-names .away-header {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 8px;
+  padding-top: 4px;
+  border-top: 1px solid #e0c870;
+}
+
+/* ── Input bar ── */
+.chat-query {
+  background: #ffe08a;
+  flex-shrink: 0;
+  border-top: 1px solid #e0c870;
+  padding: 3px 4px;
+}
+
+.chat-query td {
+  padding: 2px 4px;
+  vertical-align: middle;
+}
+
+.chat-query .query-main input[type="text"] {
+  width: 280px;
+}
+
+.chat-query .query-whisper label {
+  font-size: 12px;
+}
+
+.chat-query .query-whisper input[type="text"] {
+  font-size: 9pt;
+}
+
+.chat-query input[type="submit"],
+.chat-query input[type="reset"],
+.chat-query input[type="button"] {
+  font-size: 9pt;
+}
+
+.chat-query .exit-cell {
+  text-align: right;
+  vertical-align: middle;
+  padding-right: 8px;
+}

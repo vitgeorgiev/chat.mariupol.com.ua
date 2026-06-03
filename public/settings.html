@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Настройки — Мариупольский городской чат V2.31</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/content.css">
+<link rel="stylesheet" href="/css/settings.css">
+</head>
+<body bgcolor="#ffffff">
+
+<table cellpadding="0" cellspacing="0" border="0" bgcolor="3366ff" width="100%"><tr><td>
+<table cellpadding="4" cellspacing="1" border="0" width="100%">
+<tr><td bgcolor="ffffff" align="center">
+  <a href="/"><img src="/i/name.gif" width="219" height="32" alt="Мариуполь" border="0"></a><br>
+  <a href="/" style="text-decoration:none;color:black;">городской чат</a>
+</td></tr>
+</table>
+</td></tr></table>
+<br>
+
+<table width="100%" cellpadding="3" cellspacing="0" border="0" bgcolor="3366ff">
+<tr><td class="chapter"><b>&nbsp;Городской чат&nbsp;&gt;&gt;&nbsp;Настройки&nbsp;&gt;&gt;</b></td></tr>
+</table>
+
+<table width="100%" bgcolor="#fff2cc" cellpadding="0" cellspacing="0" border="0">
+<tr><td align="center">
+<br>
+<table width="95%" class="text" cellpadding="4" cellspacing="0" border="0">
+<tr><td align="center">
+
+<p id="error" class="settings-error" hidden></p>
+<p id="success" class="settings-success" hidden></p>
+
+<form id="settings-form">
+<table cellpadding="4" cellspacing="2" border="0" align="center">
+<tr><td align="right">Логин:</td><td><strong id="settings-nick">—</strong></td></tr>
+<tr><td align="right">Пароль:</td><td><input type="password" id="settings-password" class="chatInput" style="width:180px;" required></td></tr>
+<tr><td colspan="2"><hr noshade size="1" color="000000"></td></tr>
+
+<tr valign="top">
+  <td align="right">Цвет ника:</td>
+  <td>
+    <div id="nick-preview" class="color-preview">Логин:</div>
+    <div id="nick-cube"></div>
+    <input type="hidden" name="color" id="nick-color" value="#000000">
+  </td>
+</tr>
+
+<tr valign="top">
+  <td align="right">Цвет сообщений:</td>
+  <td>
+    <div id="msg-preview" class="color-preview">Пример текста</div>
+    <div id="msg-cube"></div>
+    <input type="hidden" name="msgColor" id="msg-color" value="#000000">
+  </td>
+</tr>
+
+<tr>
+  <td align="right"><input type="checkbox" id="colored-names" checked></td>
+  <td>Выделять ники в списке пользователей цветом</td>
+</tr>
+<tr>
+  <td align="right"><input type="checkbox" id="colored-content"></td>
+  <td>Выделять сообщения в окне сообщений цветом</td>
+</tr>
+
+<tr><td colspan="2" align="center"><br>
+  <input type="submit" value="Сохранить настройки" class="chatInput" style="width:220px;">
+  <br><br>
+  <a id="back-link" href="/">← Вернуться в чат</a>
+</td></tr>
+</table>
+</form>
+
+</td></tr>
+</table>
+<br>
+</td></tr>
+</table>
+
+<table width="100%" cellpadding="5" cellspacing="0" border="0" bgcolor="#d9e2ff" class="text"><tr><td align="center">
+<span class="copyrights">Copyright © 2000 Компания «Айтек». Все права защищены.</span>
+</td></tr></table>
+
+<script type="module" src="/js/settings.js"></script>
+</body>
+</html>

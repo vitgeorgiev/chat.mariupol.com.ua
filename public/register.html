@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Language" content="ru">
+<title>Регистрация — Мариупольский городской чат V2.31</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/content.css">
+</head>
+<body bgcolor="#ffffff">
+
+<table cellpadding="0" cellspacing="0" border="0" bgcolor="3366ff" width="100%"><tr><td>
+<table cellpadding="4" cellspacing="1" border="0" width="100%">
+<tr valign="middle">
+<td bgcolor="ffffff" align="center">
+  <a href="/"><img src="/i/name.gif" width="219" height="32" alt="Мариуполь" border="0"></a><br>
+  <a href="/" style="text-decoration:none;color:black;">городской чат</a>
+</td>
+<td bgcolor="ffffff" width="100%" align="center">
+  <font size="-1" color="#808080">Мариупольский городской портал</font>
+</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+
+<table width="100%" cellpadding="3" cellspacing="0" border="0" bgcolor="3366ff">
+<tr><td class="chapter"><b>&nbsp;Городской чат&nbsp;&gt;&gt;&nbsp;Регистрация&nbsp;&gt;&gt;</b></td></tr>
+</table>
+
+<table width="100%" bgcolor="#fff2cc" cellpadding="0" cellspacing="0" border="0">
+<tr><td align="center">
+<br>
+<table width="95%" cellpadding="0" cellspacing="0" border="0">
+<tr><td align="center">
+
+<p id="error" style="color:red;font-weight:bold;display:none;"></p>
+
+<table class="text" cellpadding="3" cellspacing="2" border="0">
+<form id="register-form">
+<tr valign="top"><td align="right">Ник:</td><td><input type="text" name="name" maxlength="20" class="chatInput" style="width:180px;" required></td></tr>
+<tr valign="top"><td align="right">Пароль:</td><td><input type="password" name="password" maxlength="50" class="chatInput" style="width:180px;" required></td></tr>
+<tr valign="top"><td align="right">Пароль ещё раз:</td><td><input type="password" name="password2" maxlength="50" class="chatInput" style="width:180px;" required></td></tr>
+<tr valign="top"><td align="right">Имя:</td><td><input type="text" name="realName" maxlength="50" class="chatInput" style="width:180px;"></td></tr>
+<tr valign="top"><td align="right">Пол:</td><td>
+<select name="gender" class="chatInput" style="width:180px;" required>
+<option value="m">мужской</option>
+<option value="f">женский</option>
+</select></td></tr>
+<tr valign="top"><td align="right">Родился:</td><td><input type="date" name="birthdate" class="chatInput" style="width:180px;"></td></tr>
+<tr valign="top"><td align="right">e-mail:</td><td><input type="email" name="email" maxlength="50" class="chatInput" style="width:180px;"></td></tr>
+<tr valign="top"><td align="right">Немного о себе:</td><td><textarea name="about" rows="6" maxlength="230" class="registrationtextarea chatInput" style="width:180px;"></textarea></td></tr>
+<tr valign="top"><td align="right">Цвет ника:</td><td>
+<select name="color" class="chatInput" style="width:180px;">
+<option value="#008000">Зелёный</option>
+<option value="#3366ff">Синий</option>
+<option value="#cc0000">Красный</option>
+<option value="#000000" selected>Чёрный</option>
+<option value="#cc0099">Розовый</option>
+<option value="#990099">Фиолетовый</option>
+<option value="#cc6600">Оранжевый</option>
+<option value="#808080">Серый</option>
+</select></td></tr>
+<tr><td colspan="2" align="center"><br>
+<input type="submit" value="Зарегистрироваться" class="chatInput" style="width:200px;">
+<br><br>
+<font size="-1"><a href="/">← Уже есть аккаунт? Войти</a></font>
+</td></tr>
+</form>
+</table>
+
+</td></tr>
+</table>
+<br>
+</td></tr>
+</table>
+
+<table width="100%" cellpadding="5" cellspacing="0" border="0" bgcolor="#d9e2ff" class="text"><tr><td align="center">
+<span class="copyrights">Copyright © 2000 Компания «Айтек». Все права защищены.</span>
+</td></tr></table>
+
+<script type="module" src="/js/register.js"></script>
+</body>
+</html>

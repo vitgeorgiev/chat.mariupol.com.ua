@@ -1,0 +1,40 @@
+.color-cube {
+  display: grid;
+  grid-template-columns: repeat(18, 10px);
+  gap: 0;
+  border: 1px solid #808080;
+  width: 180px;
+  margin: 4px 0 8px;
+}
+
+.color-cube-cell {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  display: block;
+}
+
+.color-cube-cell.selected {
+  outline: 2px solid #000;
+  outline-offset: -1px;
+  z-index: 1;
+  position: relative;
+}
+
+.color-preview {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+.settings-error {
+  color: red;
+  font-weight: bold;
+}
+
+.settings-success {
+  color: green;
+  font-weight: bold;
+}
