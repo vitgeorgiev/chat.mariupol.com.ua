@@ -46,7 +46,15 @@ npm run dev   # с автоперезагрузкой (--watch)
 
 ## Деплой
 
-### Render (рекомендуется)
+**Live:** https://chat-mariupol.fly.dev/
+
+### Fly.io
+
+```bash
+fly deploy
+```
+
+### Render (альтернатива)
 
 1. Форкните/залейте репозиторий на GitHub
 2. [render.com](https://render.com) → **New** → **Blueprint** → подключите репо
