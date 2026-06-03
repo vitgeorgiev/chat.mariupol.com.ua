@@ -1,5 +1,5 @@
 import { renderSmileys } from './smileys.js';
-import { genderIcon, normalizeColor } from './color-cube.js';
+import { genderIcon, isCustomIcon, normalizeColor } from './color-cube.js';
 
 const CHANNEL_NAMES = {
   '28763': 'Городской сад',
@@ -122,8 +122,9 @@ function addWhisper({ time, from, to, text }) {
 function renderUserLine(u, dimmed) {
   const cls = dimmed ? 'user-line user-away' : 'user-line';
   const nickColor = prefs.coloredNames ? esc(u.color) : '#000000';
+  const iconCls = 'gender-icon' + (isCustomIcon(u.name) ? ' gender-icon-custom' : '');
   return `<div class="${cls}">` +
-    `<span class="user-left"><img src="${genderIcon(u.gender)}" width="12" height="16" alt="" class="gender-icon"></span>` +
+    `<span class="user-left"><img src="${genderIcon(u.gender, u.name)}" width="12" height="16" alt="" class="${iconCls}"></span>` +
     `<span class="user-nick-wrap"><a class="nick" href="#" data-nick="${esc(u.name)}" style="color:${nickColor}">${esc(u.name)}</a></span>` +
     `<span class="user-actions">` +
     `<img src="/i/icon-whisper.svg" width="14" height="14" alt="шепнуть" title="шепнуть" data-whisper="${esc(u.name)}">` +

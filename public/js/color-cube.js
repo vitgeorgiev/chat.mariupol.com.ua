@@ -51,8 +51,18 @@ export const NICK_COLORS = COLOR_PALETTE.slice(0, 8).map((v, i) => ({
   label: ['Чёрный', 'Синий', 'Зелёный', ''][i] || v,
 }));
 
-export function genderIcon(gender) {
+const CUSTOM_ICONS = {
+  korry: '/i/korry.png',
+};
+
+export function genderIcon(gender, name) {
+  const key = (name || '').trim().toLowerCase();
+  if (CUSTOM_ICONS[key]) return CUSTOM_ICONS[key];
   return gender === 'f' ? '/i/girl.svg' : '/i/boy.svg';
+}
+
+export function isCustomIcon(name) {
+  return !!(CUSTOM_ICONS[(name || '').trim().toLowerCase()]);
 }
 
 export function renderColorCube(container, selected, onPick) {

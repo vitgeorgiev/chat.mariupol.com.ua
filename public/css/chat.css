@@ -185,6 +185,16 @@ body.chat-room {
   white-space: nowrap;
 }
 
+.chat-names .user-line .gender-icon {
+  vertical-align: middle;
+}
+
+.chat-names .user-line .gender-icon-custom {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+}
+
 .chat-names .user-line .user-actions img {
   vertical-align: middle;
   cursor: pointer;
