@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Language" content="ru">
 <title>Чат — Мариупольский городской чат V2.31</title>
 <link rel="stylesheet" href="/css/style.css">
@@ -10,9 +11,7 @@
 <body class="chat-room" bgcolor="#fff6d5">
 
 <div class="chat-header">
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-<tr valign="top">
-  <td class="header-left" nowrap>
+  <div class="header-left">
     <div class="mgch-logo">МГЧ<sup>™</sup></div>
     <div class="channel-switch">
       <select id="channel-select" class="chatInput">
@@ -21,11 +20,11 @@
         <option value="28774">В Неадминистрируемый</option>
         <option value="28775">В Карточный домик</option>
         <option value="28776">В (*) Закрытый канал</option>
-      </select><br>
+      </select>
       <input type="button" id="channel-go" value="перейти" class="chatInput">
     </div>
-  </td>
-  <td class="header-nav">
+  </div>
+  <nav class="header-nav">
     <a href="#" id="temp-out-link">временно отсутствовать</a>
     <a href="#">архив сообщений</a>
     <a href="#">почта</a>
@@ -35,14 +34,15 @@
     <a href="#">логи модераторов</a>
     <a href="#">правила чата</a>
     <a href="#">покер</a>
-  </td>
-</tr>
-</table>
+  </nav>
 </div>
 
 <div class="chat-main">
   <div id="messages" class="chat-output"></div>
-  <div class="chat-names">
+  <div class="chat-names" id="chat-names-panel">
+    <button type="button" id="users-toggle" class="users-toggle" aria-expanded="false">
+      <span id="users-toggle-label">участники</span>
+    </button>
     <div class="names-title">в <span id="channel-locative">...</span></div>
     <div id="users"></div>
     <div id="away-header" class="away-header" hidden>Временно отсутствуют</div>
@@ -51,34 +51,26 @@
 </div>
 
 <div class="chat-query">
-<table cellpadding="2" cellspacing="0" border="0" width="100%">
-<tr valign="middle">
-  <td class="query-main">
-    <form id="query-form" onsubmit="return false">
-      <label><input type="checkbox" id="action-check" accesskey="д"> Действие</label>
-      <input type="text" id="text-input" name="textcache" size="45" maxlength="500">
-      <input type="submit" value="сказать" style="width:60px;">
-      <input type="reset" id="reset-btn" value="сброс">
-      <input type="button" id="rus-btn" value="-> рус" accesskey="р">
+  <div class="query-row">
+    <form id="query-form" class="query-main" onsubmit="return false">
+      <label class="query-action-label"><input type="checkbox" id="action-check" accesskey="д"> Действие</label>
+      <input type="text" id="text-input" name="textcache" maxlength="500" class="query-text-input">
+      <div class="query-buttons">
+        <input type="submit" value="сказать">
+        <input type="reset" id="reset-btn" value="сброс">
+        <input type="button" id="rus-btn" value="-> рус" accesskey="р">
+      </div>
     </form>
-  </td>
-  <td class="exit-cell" rowspan="2">
-    <form action="/" method="get">
+    <form class="exit-form" action="/" method="get">
       <input type="submit" value="Выход">
     </form>
-  </td>
-</tr>
-<tr valign="middle">
-  <td class="query-whisper">
-    <form id="whisper-form" onsubmit="return false">
-      <label>На ушко:</label>
-      <input type="text" id="whisper-to" size="12" maxlength="20">
-      <input type="text" id="whisper-text" size="25" maxlength="500">
-      <input type="submit" value="шепнуть" style="width:70px;">
-    </form>
-  </td>
-</tr>
-</table>
+  </div>
+  <form id="whisper-form" class="query-whisper" onsubmit="return false">
+    <label>На ушко:</label>
+    <input type="text" id="whisper-to" maxlength="20" class="whisper-to-input">
+    <input type="text" id="whisper-text" maxlength="500" class="whisper-text-input">
+    <input type="submit" value="шепнуть">
+  </form>
 </div>
 
 <script>

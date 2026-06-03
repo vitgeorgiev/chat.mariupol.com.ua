@@ -45,7 +45,6 @@ document.getElementById('settings-link').href =
 
 let ws;
 let away = false;
-let channelUsers = [];
 
 const messagesEl = document.getElementById('messages');
 const usersEl = document.getElementById('users');
@@ -67,7 +66,6 @@ function connect() {
     if (data.type === 'history') {
       messagesEl.innerHTML = '';
       if (data.prefs) prefs = { ...prefs, ...data.prefs };
-      if (data.users) channelUsers = data.users.map((u) => u.name);
       data.messages.forEach((m) => addMessage(m));
       if (data.users) updateUsers(data.users);
     }
@@ -156,7 +154,6 @@ function renderUserLine(u, dimmed) {
 }
 
 function updateUsers(users) {
-  channelUsers = users.map((u) => u.name);
   const active = users.filter((u) => !u.away);
   const absent = users.filter((u) => u.away);
 
@@ -164,8 +161,12 @@ function updateUsers(users) {
   awayUsersEl.innerHTML = absent.map((u) => renderUserLine(u, true)).join('');
   awayHeaderEl.hidden = absent.length === 0;
 
+  const toggleLabel = document.getElementById('users-toggle-label');
+  if (toggleLabel) {
+    toggleLabel.textContent = `участники (${active.length})`;
+  }
+
   bindUserEvents();
-  refreshMentions();
 }
 
 function bindUserEvents() {
@@ -211,28 +212,17 @@ function escAttr(text) {
 }
 
 function highlightNicks(html) {
-  if (!channelUsers.length) return html;
-  let result = html;
-  const sorted = [...channelUsers].sort((a, b) => b.length - a.length);
-  for (const nick of sorted) {
-    const reNick = nick.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const re = new RegExp(`(${reNick})(,)`, 'gi');
-    result = result.replace(
-      re,
-      '<span class="msg-nick-mention">$1</span>,',
-    );
-  }
-  return result;
+  if (!name) return html;
+  const reNick = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(`(${reNick})(,)`, 'gi');
+  return html.replace(
+    re,
+    '<span class="msg-nick-mention">$1</span>,',
+  );
 }
 
 function renderMessageText(text) {
   return applySmileys(highlightNicks(escapeHtml(text)));
-}
-
-function refreshMentions() {
-  document.querySelectorAll('.coltext[data-raw]').forEach((el) => {
-    el.innerHTML = renderMessageText(el.dataset.raw);
-  });
 }
 
 function sendMessage(e) {
@@ -303,6 +293,15 @@ document.getElementById('rus-btn').addEventListener('click', toRus);
 document.getElementById('reset-btn').addEventListener('click', () => setTimeout(() => textInput.focus(), 0));
 tempOutLink.addEventListener('click', (e) => { e.preventDefault(); toggleAway(); });
 document.getElementById('channel-go').addEventListener('click', switchChannel);
+
+const usersToggle = document.getElementById('users-toggle');
+const chatNamesPanel = document.getElementById('chat-names-panel');
+if (usersToggle && chatNamesPanel) {
+  usersToggle.addEventListener('click', () => {
+    const open = chatNamesPanel.classList.toggle('users-open');
+    usersToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
 
 textInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {

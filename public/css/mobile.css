@@ -1,0 +1,81 @@
+/* Portal pages — mobile layout */
+
+@media (max-width: 768px) {
+  body {
+    margin: 0;
+    padding: 0 4px;
+  }
+
+  table[width="100%"],
+  table[width="95%"],
+  table[width="80%"],
+  table[width="10%"] {
+    width: 100% !important;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  input.chatInput,
+  select.chatInput,
+  textarea.chatInput {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Login / register forms */
+  form[name="login"] table tr,
+  #register-form tr,
+  #settings-form tr {
+    display: block;
+  }
+
+  form[name="login"] table td,
+  #register-form td,
+  #settings-form td {
+    display: block;
+    width: 100% !important;
+    text-align: left !important;
+    padding: 2px 0;
+  }
+
+  form[name="login"] input.chatInput,
+  #register-form input.chatInput,
+  #register-form select.chatInput,
+  #register-form textarea.chatInput {
+    width: 100% !important;
+  }
+
+  /* Nav menu row */
+  table[width="80%"] tr {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  table[width="80%"] td {
+    width: auto !important;
+    flex: 1 1 40%;
+    min-width: 70px;
+  }
+
+  /* Profile / settings content */
+  table.text {
+    font-size: 13px;
+  }
+
+  .color-cube {
+    grid-template-columns: repeat(18, minmax(0, 1fr));
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .color-cube-cell {
+    width: 100%;
+    aspect-ratio: 1;
+    height: auto;
+  }
+}
