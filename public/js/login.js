@@ -29,6 +29,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
       return;
     }
     sessionStorage.setItem('mgch_pwd', form.password.value);
+    sessionStorage.setItem('mgch_announce_join', '1');
     const q = new URLSearchParams({
       name: data.user.name,
       channel: data.channel,

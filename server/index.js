@@ -3,7 +3,7 @@ import { WebSocketServer } from 'ws';
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { initHistory, addToHistory, getChannelHistory } from './history.js';
+import { initHistory, addToHistory, getChannelHistory, HISTORY_PAGE_SIZE } from './history.js';
 import { initUsers, registerUser, loginUser, getProfile, touchLastSeen, getUserPrefs, getSettings, updateSettings } from './users.js';
 import { normalizeColor } from './colors.js';
 
@@ -189,11 +189,14 @@ wss.on('connection', (ws) => {
 
       touchLastSeen(trimmed);
 
+      const history = getChannelHistory(channel);
       ws.send(JSON.stringify({
         type: 'history',
         channel,
         channelName: CHANNELS[channel],
-        messages: getChannelHistory(channel),
+        messages: history.messages,
+        hasMore: history.hasMore,
+        oldestTs: history.oldestTs,
         users: getUsersInChannel(channel),
         prefs: {
           color,
@@ -202,18 +205,26 @@ wss.on('connection', (ws) => {
           coloredContent: !!prefs.coloredContent,
         },
       }));
-      emitMessage(channel, {
-        time: formatTime(),
-        nick: '***',
-        text: `${trimmed} ${joinVerb(gender)} в чат`,
-        system: true,
-      });
+      if (msg.announce) {
+        emitMessage(channel, {
+          time: formatTime(),
+          nick: '***',
+          text: `${trimmed} ${joinVerb(gender)} в чат`,
+          system: true,
+        });
+      }
       sendUserList(channel);
       return;
     }
 
     const client = clients.get(ws);
     if (!client) return;
+
+    if (msg.type === 'loadHistory' && msg.beforeTs) {
+      const batch = getChannelHistory(client.channel, { beforeTs: msg.beforeTs });
+      ws.send(JSON.stringify({ type: 'historyMore', ...batch }));
+      return;
+    }
 
     if (msg.type === 'message' && msg.text?.trim()) {
       const entry = makeMessage({
@@ -275,5 +286,5 @@ function formatTime(date = new Date()) {
 
 server.listen(PORT, () => {
   console.log(`Мариупольский городской чат V2.31 — http://localhost:${PORT}`);
-  console.log(`История: ${DATA_DIR} (хранение 7 дней)`);
+  console.log(`История: ${DATA_DIR} (без ограничения срока, по ${HISTORY_PAGE_SIZE} сообщ.)`);
 });

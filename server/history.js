@@ -1,8 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 
-const RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
-const PRUNE_INTERVAL_MS = 60 * 60 * 1000;
+export const HISTORY_PAGE_SIZE = 100;
 
 let dataFile = '';
 let messages = [];
@@ -15,11 +14,18 @@ function persist() {
   writeFileSync(dataFile, JSON.stringify(messages), 'utf8');
 }
 
-function prune() {
-  const cutoff = Date.now() - RETENTION_MS;
-  const before = messages.length;
-  messages = messages.filter((m) => m.ts >= cutoff);
-  if (messages.length !== before) persist();
+function serializeMessage(m) {
+  return {
+    time: m.time,
+    nick: m.nick,
+    text: m.text,
+    action: m.action,
+    system: m.system,
+    color: m.color,
+    gender: m.gender,
+    msgColor: m.msgColor,
+    coloredContent: m.coloredContent,
+  };
 }
 
 export function initHistory(dataDir) {
@@ -34,9 +40,6 @@ export function initHistory(dataDir) {
       messages = [];
     }
   }
-
-  prune();
-  setInterval(prune, PRUNE_INTERVAL_MS);
 }
 
 export function addToHistory(entry) {
@@ -44,11 +47,20 @@ export function addToHistory(entry) {
   persist();
 }
 
-export function getChannelHistory(channel) {
-  const cutoff = Date.now() - RETENTION_MS;
-  return messages
-    .filter((m) => m.channel === channel && m.ts >= cutoff)
-    .map(({ time, nick, text, action, system, color, gender, msgColor, coloredContent }) => ({
-      time, nick, text, action, system, color, gender, msgColor, coloredContent,
-    }));
+export function getChannelHistory(channel, { beforeTs, limit = HISTORY_PAGE_SIZE } = {}) {
+  let list = messages.filter((m) => m.channel === channel);
+  if (beforeTs) {
+    list = list.filter((m) => m.ts < beforeTs);
+  }
+  list.sort((a, b) => a.ts - b.ts);
+
+  const hasMore = list.length > limit;
+  const page = list.slice(-limit);
+  const oldestTs = page.length ? page[0].ts : null;
+
+  return {
+    messages: page.map(serializeMessage),
+    hasMore,
+    oldestTs,
+  };
 }

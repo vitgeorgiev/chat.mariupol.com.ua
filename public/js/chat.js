@@ -45,6 +45,9 @@ document.getElementById('settings-link').href =
 
 let ws;
 let away = false;
+let historyHasMore = false;
+let historyOldestTs = null;
+let historyLoading = false;
 
 const messagesEl = document.getElementById('messages');
 const usersEl = document.getElementById('users');
@@ -58,16 +61,30 @@ function connect() {
   ws = new WebSocket(`${protocol}//${location.host}`);
 
   ws.onopen = () => {
-    ws.send(JSON.stringify({ type: 'join', name, channel, gender, color }));
+    const announce = sessionStorage.getItem('mgch_announce_join') === '1';
+    if (announce) sessionStorage.removeItem('mgch_announce_join');
+    ws.send(JSON.stringify({
+      type: 'join', name, channel, gender, color, announce,
+    }));
   };
 
   ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
     if (data.type === 'history') {
       messagesEl.innerHTML = '';
+      historyHasMore = !!data.hasMore;
+      historyOldestTs = data.oldestTs ?? null;
+      historyLoading = false;
       if (data.prefs) prefs = { ...prefs, ...data.prefs };
-      data.messages.forEach((m) => addMessage(m));
+      data.messages.forEach((m) => appendMessage(m, false));
+      messagesEl.scrollTop = messagesEl.scrollHeight;
       if (data.users) updateUsers(data.users);
+    }
+    if (data.type === 'historyMore') {
+      prependHistory(data.messages);
+      historyHasMore = !!data.hasMore;
+      historyOldestTs = data.oldestTs ?? historyOldestTs;
+      historyLoading = false;
     }
     if (data.type === 'message') addMessage(data);
     if (data.type === 'whisper') addWhisper(data);
@@ -77,7 +94,7 @@ function connect() {
   ws.onclose = () => setTimeout(connect, 2000);
 }
 
-function addMessage({ time, nick, text, system, action, color: nickCol, msgColor }) {
+function createMessageRow({ time, nick, text, system, action, color: nickCol, msgColor }) {
   const row = document.createElement('div');
   row.className = 'msg-row';
 
@@ -123,8 +140,32 @@ function addMessage({ time, nick, text, system, action, color: nickCol, msgColor
     });
   }
 
-  messagesEl.appendChild(row);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return row;
+}
+
+function appendMessage(msg, scroll = true) {
+  messagesEl.appendChild(createMessageRow(msg));
+  if (scroll) messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addMessage(msg) {
+  appendMessage(msg, true);
+}
+
+function prependHistory(batch) {
+  if (!batch?.length) return;
+  const prevHeight = messagesEl.scrollHeight;
+  const frag = document.createDocumentFragment();
+  batch.forEach((m) => frag.appendChild(createMessageRow(m)));
+  messagesEl.insertBefore(frag, messagesEl.firstChild);
+  messagesEl.scrollTop = messagesEl.scrollHeight - prevHeight;
+}
+
+function loadOlderHistory() {
+  if (historyLoading || !historyHasMore || !historyOldestTs) return;
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  historyLoading = true;
+  ws.send(JSON.stringify({ type: 'loadHistory', beforeTs: historyOldestTs }));
 }
 
 function addWhisper({ time, from, to, text }) {
@@ -302,6 +343,10 @@ if (usersToggle && chatNamesPanel) {
     usersToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
 }
+
+messagesEl.addEventListener('scroll', () => {
+  if (messagesEl.scrollTop < 60) loadOlderHistory();
+});
 
 textInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
