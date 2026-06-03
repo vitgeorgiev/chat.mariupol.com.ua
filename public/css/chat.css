@@ -93,24 +93,18 @@ body.chat-room {
   color: #666;
 }
 
+.chat-output .time {
+  font-size: 12px;
+  color: inherit;
+}
+
 .chat-output .colname {
-  font-family: "Times New Roman", Times, serif;
   font-size: 12px;
   font-weight: normal;
-  font-style: italic;
 }
 
 .chat-output .coltext {
-  font-family: "Times New Roman", Times, serif;
   font-size: 12px;
-  font-style: italic;
-}
-
-.chat-output .time {
-  font-family: "Times New Roman", Times, serif;
-  font-size: 12px;
-  font-style: italic;
-  color: inherit;
 }
 
 .chat-output .msg-nick-mention {
