@@ -82,10 +82,6 @@ function connect() {
 function addMessage({ time, nick, text, system, action, color: nickCol, msgColor }) {
   const row = document.createElement('div');
   row.className = 'msg-row';
-  const nickColor = prefs.coloredNames ? normalizeColor(nickCol) : '#000000';
-  const textColor = prefs.coloredContent
-    ? normalizeColor(msgColor || nickCol)
-    : null;
 
   if (system) {
     row.innerHTML =
@@ -93,13 +89,32 @@ function addMessage({ time, nick, text, system, action, color: nickCol, msgColor
   } else {
     const nameClass = action ? 'colname colname-action' : 'colname';
     const textClass = action ? 'coltext coltext-action' : 'coltext';
-    const nickStyle = action ? '' : ` style="color:${nickColor}"`;
-    const textStyle = textColor && !action ? ` style="color:${textColor}"` : '';
+    const senderNickColor = normalizeColor(nickCol);
+    const nickColor = prefs.coloredNames ? senderNickColor : '#000000';
+    const textColor = prefs.coloredContent
+      ? normalizeColor(msgColor || nickCol)
+      : null;
+
+    let nickStyle;
+    let textStyle;
+    let timeStyle;
+    if (action) {
+      const actionStyle = ` style="color:${senderNickColor}"`;
+      nickStyle = actionStyle;
+      textStyle = actionStyle;
+      timeStyle = actionStyle;
+      row.classList.add('msg-row-action');
+    } else {
+      nickStyle = ` style="color:${nickColor}"`;
+      textStyle = textColor ? ` style="color:${textColor}"` : '';
+      timeStyle = textStyle;
+    }
+
     row.innerHTML =
       `<span class="msg-bullet">•</span> ` +
       `<span class="${nameClass}"><a class="nick"${nickStyle} href="#" data-nick="${esc(nick)}">${esc(nick)}</a>:</span> ` +
       `<span class="${textClass}"${textStyle} data-raw="${escAttr(text)}">${renderMessageText(text)}</span> ` +
-      `<span class="time"${textStyle}>(${esc(time)})</span>`;
+      `<span class="time"${timeStyle}>(${esc(time)})</span>`;
     row.querySelector('.nick')?.addEventListener('click', (e) => {
       e.preventDefault();
       insertNick(nick);

@@ -93,14 +93,28 @@ body.chat-room {
   color: #666;
 }
 
-.chat-output .time {
+.chat-output .colname {
+  font-family: "Times New Roman", Times, serif;
   font-size: 12px;
+  font-weight: normal;
+  font-style: italic;
+}
+
+.chat-output .coltext {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.chat-output .time {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 12px;
+  font-style: italic;
   color: inherit;
 }
 
-.chat-output .colname {
-  font-size: 12px;
-  font-weight: normal;
+.chat-output .msg-nick-mention {
+  text-decoration: underline;
 }
 
 .chat-output .colname a.nick {
@@ -112,17 +126,11 @@ body.chat-room {
   text-decoration: underline;
 }
 
-.chat-output .coltext {
-  font-size: 12px;
-}
-
-.chat-output .msg-nick-mention {
-  text-decoration: underline;
-}
-
 .chat-output .coltext-action,
 .chat-output .colname-action,
-.chat-output .colname-action a.nick {
+.chat-output .colname-action a.nick,
+.chat-output .msg-row-action .time {
+  font-family: "Times New Roman", Times, serif;
   font-style: italic;
   font-weight: normal;
 }
