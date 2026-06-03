@@ -124,7 +124,8 @@ body.chat-room {
 .chat-output .colname-action,
 .chat-output .colname-action a.nick,
 .chat-output .msg-row-action .time {
-  font-family: "Times New Roman", Times, serif;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
   font-style: italic;
   font-weight: normal;
 }

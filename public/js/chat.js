@@ -110,9 +110,13 @@ function addMessage({ time, nick, text, system, action, color: nickCol, msgColor
       timeStyle = textStyle;
     }
 
+    const nickPart = action
+      ? `<span class="${nameClass}"><a class="nick"${nickStyle} href="#" data-nick="${esc(nick)}">${esc(nick)}</a></span> `
+      : `<span class="${nameClass}"><a class="nick"${nickStyle} href="#" data-nick="${esc(nick)}">${esc(nick)}</a>:</span> `;
+
     row.innerHTML =
       `<span class="msg-bullet">•</span> ` +
-      `<span class="${nameClass}"><a class="nick"${nickStyle} href="#" data-nick="${esc(nick)}">${esc(nick)}</a>:</span> ` +
+      nickPart +
       `<span class="${textClass}"${textStyle} data-raw="${escAttr(text)}">${renderMessageText(text)}</span> ` +
       `<span class="time"${timeStyle}>(${esc(time)})</span>`;
     row.querySelector('.nick')?.addEventListener('click', (e) => {
