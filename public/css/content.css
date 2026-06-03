@@ -1,0 +1,7 @@
+A:link, A:visited, A:active, A:hover {
+  text-decoration: underline;
+}
+
+a.n:link, a.n:visited {
+  text-decoration: none;
+}

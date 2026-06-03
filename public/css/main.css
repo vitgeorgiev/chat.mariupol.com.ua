@@ -1,0 +1,72 @@
+.text {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+.footer {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  text-decoration: none;
+  color: #0000ff;
+}
+
+a.footer:hover, a.footer:active {
+  text-decoration: underline;
+}
+
+.copyrights {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #808080;
+  text-decoration: none;
+}
+
+a.copyrights:active, a.copyrights:hover {
+  color: #808080;
+  text-decoration: underline;
+}
+
+.zakladki {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  text-decoration: none;
+}
+
+a.zakladki:link, a.zakladki:visited {
+  text-decoration: none;
+}
+
+a.zakladki:active, a.zakladki:hover {
+  text-decoration: underline;
+}
+
+#zoff {
+  color: #000000;
+  vertical-align: bottom;
+}
+
+#zon {
+  color: #ffffff;
+  vertical-align: middle;
+}
+
+.PortalPart {
+  text-decoration: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10pt;
+  color: #000000;
+}
+
+.chapter {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.chatInput {
+  font-size: 9pt;
+}
+
+.tdiv {
+  font-size: 4px;
+}

@@ -1,0 +1,89 @@
+.registrationtextarea {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.time {
+  font-size: 8pt;
+}
+
+a.nick:link, a.nick:visited {
+  text-decoration: none;
+}
+
+.nick {
+  font-size: 12px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.level {
+  font-size: 10px;
+  color: #3366ff;
+}
+
+.nowinchat {
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.heads {
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.colname {
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: bold;
+}
+
+.coltext {
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.chat-messages {
+  background: #ffffff;
+  border: 1px solid #3366ff;
+  height: 400px;
+  overflow-y: auto;
+  padding: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.chat-messages .msg-time {
+  color: #808080;
+  font-size: 10px;
+}
+
+.chat-messages .msg-nick {
+  font-weight: bold;
+  color: #3366ff;
+}
+
+.chat-messages .msg-system {
+  color: #808080;
+  font-style: italic;
+}
+
+.users-list {
+  background: #ffffff;
+  border: 1px solid #3366ff;
+  height: 400px;
+  overflow-y: auto;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.users-list .user-nick {
+  cursor: pointer;
+}
+
+.users-list .user-nick:hover {
+  text-decoration: underline;
+}
