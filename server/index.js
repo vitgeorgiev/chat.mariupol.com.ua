@@ -23,6 +23,14 @@ function normalizeGender(gender) {
   return gender === 'f' ? 'f' : 'm';
 }
 
+function joinVerb(gender) {
+  return gender === 'f' ? 'вошла' : 'вошёл';
+}
+
+function leaveVerb(gender) {
+  return gender === 'f' ? 'вышла' : 'вышел';
+}
+
 initHistory(DATA_DIR);
 initUsers(DATA_DIR);
 
@@ -197,7 +205,7 @@ wss.on('connection', (ws) => {
       emitMessage(channel, {
         time: formatTime(),
         nick: '***',
-        text: `${name.trim()} вошёл в чат`,
+        text: `${trimmed} ${joinVerb(gender)} в чат`,
         system: true,
       });
       sendUserList(channel);
@@ -255,7 +263,7 @@ function handleDisconnect(ws) {
   emitMessage(client.channel, {
     time: formatTime(),
     nick: '***',
-    text: `${client.name} вышел из чата`,
+    text: `${client.name} ${leaveVerb(client.gender)} из чата`,
     system: true,
   });
   sendUserList(client.channel);
