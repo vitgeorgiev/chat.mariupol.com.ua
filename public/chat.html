@@ -11,41 +11,93 @@
 </head>
 <body class="chat-room" bgcolor="#fff6d5">
 
-<div class="chat-header">
-  <div class="header-left">
-    <div class="mgch-logo">МГЧ<sup>™</sup></div>
-    <div class="channel-switch">
-      <select id="channel-select" class="chatInput">
-        <option value="28763">В Городской сад</option>
-        <option value="28773">В Квартал свиданий</option>
-        <option value="28774">В Неадминистрируемый</option>
-        <option value="28775">В Карточный домик</option>
-        <option value="28776">В (*) Закрытый канал</option>
-      </select>
-      <input type="button" id="channel-go" value="перейти" class="chatInput">
+<div class="chat-scrim" id="chat-scrim" aria-hidden="true"></div>
+
+<header class="chat-header">
+  <button type="button" class="m-burger chat-mobile-only" id="m-burger" aria-label="Меню">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+  </button>
+  <div class="chat-header-mobile chat-mobile-only">
+    <div class="mgch-logo mgch-logo--mobile">МГЧ<sup>™</sup></div>
+    <div class="m-roomwrap">
+      <button type="button" class="m-roompill" id="m-roompill" aria-label="Канал и меню">
+        <span id="m-channel-label">…</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <button type="button" class="m-parts" id="m-parts" aria-label="Участники">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8z"/></svg>
+      <b id="m-parts-count">0</b>
+    </button>
+  </div>
+  <div class="chat-header-desktop chat-desktop-only">
+    <div class="header-left">
+      <div class="mgch-logo">МГЧ<sup>™</sup></div>
+      <div id="channel-slot-header" class="channel-slot"></div>
+    </div>
+    <nav class="header-nav" aria-label="Навигация">
+      <a href="#" id="temp-out-link">отсутствовать</a>
+      <a href="/settings.html" id="settings-link">настройки</a>
+      <a href="/profile.html" id="my-info-link">моя инфа</a>
+      <a href="#">архив</a>
+      <a href="#">почта</a>
+      <a href="#">правила</a>
+      <a href="#" class="nav-secondary">покер</a>
+      <a href="#" class="nav-secondary">фото</a>
+      <a href="#" class="nav-secondary">логи</a>
+    </nav>
+  </div>
+</header>
+
+<aside class="chat-drawer" id="chat-drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="mgch-logo mgch-logo--drawer">МГЧ<sup>™</sup></div>
+    <button type="button" class="drawer-close" id="drawer-close" aria-label="Закрыть">×</button>
+  </div>
+  <div class="drawer-body">
+    <div id="channel-slot-drawer" class="drawer-channel channel-slot"></div>
+    <nav class="drawer-menu" id="drawer-menu" aria-label="Меню"></nav>
+    <div class="drawer-section-label" id="drawer-users-label">участники (0)</div>
+    <div class="drawer-plist" id="drawer-users"></div>
+    <div id="drawer-away-header" class="drawer-away-header" hidden>Временно отсутствуют</div>
+    <div class="drawer-plist drawer-plist-away" id="drawer-away-users"></div>
+    <div class="drawer-tools">
+      <label class="query-action-label"><input type="checkbox" id="action-check-drawer" accesskey="д"> Действие</label>
+      <form id="whisper-form-drawer" class="query-whisper" onsubmit="return false">
+        <label>На ушко:</label>
+        <input type="text" id="whisper-to-drawer" maxlength="20" class="whisper-to-input">
+        <input type="text" id="whisper-text-drawer" maxlength="500" class="whisper-text-input">
+        <input type="submit" value="шепнуть">
+      </form>
+      <div class="drawer-tools-row">
+        <input type="button" id="rus-btn-drawer" value="-> рус" class="chatInput">
+        <input type="button" id="reset-btn-drawer" value="сброс" class="chatInput">
+      </div>
     </div>
   </div>
-  <nav class="header-nav" aria-label="Навигация">
-    <a href="#" id="temp-out-link">отсутствовать</a>
-    <a href="/settings.html" id="settings-link">настройки</a>
-    <a href="/profile.html" id="my-info-link">моя инфа</a>
-    <a href="#">архив</a>
-    <a href="#">почта</a>
-    <a href="#">правила</a>
-    <a href="#" class="nav-secondary">покер</a>
-    <a href="#" class="nav-secondary">фото</a>
-    <a href="#" class="nav-secondary">логи</a>
-  </nav>
+  <div class="drawer-foot">
+    <form class="exit-form exit-form-drawer" action="/" method="get">
+      <input type="submit" value="Выход">
+    </form>
+  </div>
+</aside>
+
+<div id="channel-switch-root" class="channel-switch" hidden>
+  <select id="channel-select" class="chatInput">
+    <option value="28763">В Городской сад</option>
+    <option value="28773">В Квартал свиданий</option>
+    <option value="28774">В Неадминистрируемый</option>
+    <option value="28775">В Карточный домик</option>
+    <option value="28776">В (*) Закрытый канал</option>
+  </select>
+  <input type="button" id="channel-go" value="перейти" class="chatInput">
 </div>
 
 <div class="chat-main">
   <div id="messages" class="chat-output"></div>
 </div>
 
-<aside class="chat-names" id="chat-names-panel">
-  <button type="button" id="users-toggle" class="users-toggle" aria-expanded="false">
-    <span id="users-toggle-label">участники</span>
-  </button>
+<aside class="chat-names chat-desktop-only" id="chat-names-panel">
   <div class="names-title">в <span id="channel-locative-side">...</span></div>
   <div id="users"></div>
   <div id="away-header" class="away-header" hidden>Временно отсутствуют</div>
@@ -53,21 +105,19 @@
 </aside>
 
 <div class="chat-query">
-  <div class="query-row">
-    <form id="query-form" class="query-main" onsubmit="return false">
-      <label class="query-action-label"><input type="checkbox" id="action-check" accesskey="д"> Действие</label>
-      <input type="text" id="text-input" name="textcache" maxlength="500" class="query-text-input">
-      <div class="query-buttons">
-        <input type="submit" value="сказать">
-        <input type="reset" id="reset-btn" value="сброс">
-        <input type="button" id="rus-btn" value="-> рус" accesskey="р">
-      </div>
-    </form>
-    <form class="exit-form" action="/" method="get">
-      <input type="submit" value="Выход">
-    </form>
-  </div>
-  <form id="whisper-form" class="query-whisper" onsubmit="return false">
+  <form id="query-form" class="query-main mobile-composer" onsubmit="return false">
+    <label class="query-action-label chat-desktop-only"><input type="checkbox" id="action-check" accesskey="д"> Действие</label>
+    <input type="text" id="text-input" name="textcache" maxlength="500" class="query-text-input" placeholder="Сообщение…" autocomplete="off">
+    <div class="query-buttons">
+      <input type="submit" value="сказать" class="btn-say">
+      <input type="reset" id="reset-btn" value="сброс" class="chat-desktop-only">
+      <input type="button" id="rus-btn" value="-> рус" accesskey="р" class="chat-desktop-only">
+    </div>
+  </form>
+  <form class="exit-form chat-desktop-only" action="/" method="get">
+    <input type="submit" value="Выход">
+  </form>
+  <form id="whisper-form" class="query-whisper chat-desktop-only" onsubmit="return false">
     <label>На ушко:</label>
     <input type="text" id="whisper-to" maxlength="20" class="whisper-to-input">
     <input type="text" id="whisper-text" maxlength="500" class="whisper-text-input">

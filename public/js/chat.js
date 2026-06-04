@@ -35,8 +35,14 @@ if (!name || !channel) {
 }
 
 document.title = `${CHANNEL_NAMES[channel] || 'Чат'} — Мариупольский городской чат V2.31`;
-document.getElementById('channel-locative-side').textContent =
-  CHANNEL_NAMES_LOCATIVE[channel] || 'чате';
+const channelLocativeEl = document.getElementById('channel-locative-side');
+if (channelLocativeEl) {
+  channelLocativeEl.textContent = CHANNEL_NAMES_LOCATIVE[channel] || 'чате';
+}
+const mChannelLabel = document.getElementById('m-channel-label');
+if (mChannelLabel) {
+  mChannelLabel.textContent = CHANNEL_NAMES[channel] || 'чат';
+}
 document.getElementById('channel-select').value = channel;
 document.getElementById('my-info-link').href =
   `/profile.html?name=${encodeURIComponent(name)}`;
@@ -197,21 +203,32 @@ function renderUserLine(u, dimmed) {
 function updateUsers(users) {
   const active = users.filter((u) => !u.away);
   const absent = users.filter((u) => u.away);
+  const htmlActive = active.map((u) => renderUserLine(u, false)).join('');
+  const htmlAbsent = absent.map((u) => renderUserLine(u, true)).join('');
 
-  usersEl.innerHTML = active.map((u) => renderUserLine(u, false)).join('');
-  awayUsersEl.innerHTML = absent.map((u) => renderUserLine(u, true)).join('');
-  awayHeaderEl.hidden = absent.length === 0;
+  if (usersEl) usersEl.innerHTML = htmlActive;
+  if (awayUsersEl) awayUsersEl.innerHTML = htmlAbsent;
+  if (awayHeaderEl) awayHeaderEl.hidden = absent.length === 0;
 
-  const toggleLabel = document.getElementById('users-toggle-label');
-  if (toggleLabel) {
-    toggleLabel.textContent = `участники (${active.length})`;
-  }
+  const drawerUsers = document.getElementById('drawer-users');
+  const drawerAway = document.getElementById('drawer-away-users');
+  const drawerAwayHdr = document.getElementById('drawer-away-header');
+  if (drawerUsers) drawerUsers.innerHTML = htmlActive;
+  if (drawerAway) drawerAway.innerHTML = htmlAbsent;
+  if (drawerAwayHdr) drawerAwayHdr.hidden = absent.length === 0;
+
+  const drawerLabel = document.getElementById('drawer-users-label');
+  if (drawerLabel) drawerLabel.textContent = `участники (${active.length})`;
+
+  const mCount = document.getElementById('m-parts-count');
+  if (mCount) mCount.textContent = String(active.length);
 
   bindUserEvents();
 }
 
 function bindUserEvents() {
-  document.querySelectorAll('#users .nick, #away-users .nick').forEach((el) => {
+  const nickSelector = '#users .nick, #away-users .nick, #drawer-users .nick, #drawer-away-users .nick';
+  document.querySelectorAll(nickSelector).forEach((el) => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
       insertNick(el.dataset.nick);
@@ -219,8 +236,9 @@ function bindUserEvents() {
   });
   document.querySelectorAll('[data-whisper]').forEach((el) => {
     el.addEventListener('click', () => {
-      document.getElementById('whisper-to').value = el.dataset.whisper;
-      document.getElementById('whisper-text').focus();
+      setWhisperTo(el.dataset.whisper);
+      focusWhisperText();
+      if (isMobileLayout()) openDrawer('whisper');
     });
   });
   document.querySelectorAll('[data-profile]').forEach((el) => {
@@ -230,11 +248,46 @@ function bindUserEvents() {
   });
   document.querySelectorAll('[data-smile]').forEach((el) => {
     el.addEventListener('click', () => {
-      document.getElementById('whisper-to').value = el.dataset.smile;
-      document.getElementById('whisper-text').value = ':) ';
-      document.getElementById('whisper-text').focus();
+      setWhisperTo(el.dataset.smile);
+      setWhisperText(':) ');
+      focusWhisperText();
+      if (isMobileLayout()) openDrawer('whisper');
     });
   });
+}
+
+function isMobileLayout() {
+  return window.matchMedia('(max-width: 768px)').matches;
+}
+
+function whisperToInput() {
+  return document.getElementById('whisper-to') || document.getElementById('whisper-to-drawer');
+}
+
+function whisperTextInput() {
+  return document.getElementById('whisper-text') || document.getElementById('whisper-text-drawer');
+}
+
+function setWhisperTo(val) {
+  [document.getElementById('whisper-to'), document.getElementById('whisper-to-drawer')].forEach((el) => {
+    if (el && el.value !== val) el.value = val;
+  });
+}
+
+function setWhisperText(val) {
+  [document.getElementById('whisper-text'), document.getElementById('whisper-text-drawer')].forEach((el) => {
+    if (el && el.value !== val) el.value = val;
+  });
+}
+
+function focusWhisperText() {
+  (whisperTextInput() || textInput)?.focus();
+}
+
+function actionChecked() {
+  const main = document.getElementById('action-check');
+  const drawer = document.getElementById('action-check-drawer');
+  return !!(main?.checked || drawer?.checked);
 }
 
 function insertNick(nick) {
@@ -273,7 +326,7 @@ function sendMessage(e) {
   ws.send(JSON.stringify({
     type: 'message',
     text,
-    action: document.getElementById('action-check').checked,
+    action: actionChecked(),
   }));
   textInput.value = '';
   textInput.focus();
@@ -281,11 +334,12 @@ function sendMessage(e) {
 
 function sendWhisper(e) {
   e?.preventDefault();
-  const to = document.getElementById('whisper-to').value.trim();
-  const text = document.getElementById('whisper-text').value.trim();
+  const to = whisperToInput()?.value.trim();
+  const text = whisperTextInput()?.value.trim();
   if (!to || !text || !ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(JSON.stringify({ type: 'whisper', to, text }));
-  document.getElementById('whisper-text').value = '';
+  setWhisperText('');
+  closeDrawer();
 }
 
 function toRus() {
@@ -302,7 +356,10 @@ function toRus() {
 
 function toggleAway() {
   away = !away;
-  tempOutLink.classList.toggle('active-away', away);
+  tempOutLink?.classList.toggle('active-away', away);
+  document.querySelectorAll('#drawer-menu .mbtn[data-away]').forEach((el) => {
+    el.classList.toggle('active-away', away);
+  });
   if (ws?.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify({ type: 'away', away }));
   }
@@ -329,20 +386,93 @@ function switchChannel() {
 }
 
 document.getElementById('query-form').addEventListener('submit', sendMessage);
-document.getElementById('whisper-form').addEventListener('submit', sendWhisper);
-document.getElementById('rus-btn').addEventListener('click', toRus);
-document.getElementById('reset-btn').addEventListener('click', () => setTimeout(() => textInput.focus(), 0));
-tempOutLink.addEventListener('click', (e) => { e.preventDefault(); toggleAway(); });
-document.getElementById('channel-go').addEventListener('click', switchChannel);
+document.getElementById('whisper-form')?.addEventListener('submit', sendWhisper);
+document.getElementById('whisper-form-drawer')?.addEventListener('submit', sendWhisper);
+document.getElementById('rus-btn')?.addEventListener('click', toRus);
+document.getElementById('rus-btn-drawer')?.addEventListener('click', toRus);
+document.getElementById('reset-btn')?.addEventListener('click', () => setTimeout(() => textInput.focus(), 0));
+document.getElementById('reset-btn-drawer')?.addEventListener('click', () => setTimeout(() => textInput.focus(), 0));
+tempOutLink?.addEventListener('click', (e) => { e.preventDefault(); toggleAway(); });
+document.getElementById('channel-go')?.addEventListener('click', switchChannel);
 
-const usersToggle = document.getElementById('users-toggle');
-const chatNamesPanel = document.getElementById('chat-names-panel');
-if (usersToggle && chatNamesPanel) {
-  usersToggle.addEventListener('click', () => {
-    const open = chatNamesPanel.classList.toggle('users-open');
-    usersToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+const channelRoot = document.getElementById('channel-switch-root');
+const channelSlotHeader = document.getElementById('channel-slot-header');
+const channelSlotDrawer = document.getElementById('channel-slot-drawer');
+
+function placeChannelSwitch() {
+  if (!channelRoot || !channelSlotHeader || !channelSlotDrawer) return;
+  const slot = isMobileLayout() ? channelSlotDrawer : channelSlotHeader;
+  if (channelRoot.parentElement !== slot) slot.appendChild(channelRoot);
+  channelRoot.hidden = false;
+}
+
+placeChannelSwitch();
+window.addEventListener('resize', placeChannelSwitch);
+
+const drawerMenu = document.getElementById('drawer-menu');
+if (drawerMenu) {
+  document.querySelectorAll('.header-nav a').forEach((link) => {
+    const a = document.createElement('a');
+    a.className = 'mbtn';
+    a.href = link.getAttribute('href') || '#';
+    a.textContent = link.textContent.trim();
+    if (link.id === 'temp-out-link') {
+      a.href = '#';
+      a.dataset.away = '1';
+      a.addEventListener('click', (e) => { e.preventDefault(); toggleAway(); closeDrawer(); });
+    } else if (link.id === 'settings-link' || link.id === 'my-info-link') {
+      a.href = link.href;
+    }
+    drawerMenu.appendChild(a);
   });
 }
+
+const chatDrawer = document.getElementById('chat-drawer');
+const chatScrim = document.getElementById('chat-scrim');
+
+function openDrawer(focus) {
+  document.body.classList.add('chat-drawer-open');
+  if (chatDrawer) {
+    chatDrawer.setAttribute('aria-hidden', 'false');
+  }
+  if (chatScrim) chatScrim.setAttribute('aria-hidden', 'false');
+  if (focus === 'whisper') {
+    setTimeout(() => whisperTextInput()?.focus(), 200);
+  }
+}
+
+function closeDrawer() {
+  document.body.classList.remove('chat-drawer-open');
+  if (chatDrawer) chatDrawer.setAttribute('aria-hidden', 'true');
+  if (chatScrim) chatScrim.setAttribute('aria-hidden', 'true');
+}
+
+document.getElementById('m-burger')?.addEventListener('click', () => openDrawer());
+document.getElementById('m-roompill')?.addEventListener('click', () => openDrawer());
+document.getElementById('m-parts')?.addEventListener('click', () => openDrawer());
+document.getElementById('drawer-close')?.addEventListener('click', closeDrawer);
+chatScrim?.addEventListener('click', closeDrawer);
+
+const actionMain = document.getElementById('action-check');
+const actionDrawer = document.getElementById('action-check-drawer');
+function syncAction(from, to) {
+  if (from && to) to.checked = from.checked;
+}
+actionMain?.addEventListener('change', () => syncAction(actionMain, actionDrawer));
+actionDrawer?.addEventListener('change', () => syncAction(actionDrawer, actionMain));
+
+function syncWhisperFields(e) {
+  const id = e.target.id;
+  if (id === 'whisper-to' || id === 'whisper-to-drawer') {
+    setWhisperTo(e.target.value);
+  }
+  if (id === 'whisper-text' || id === 'whisper-text-drawer') {
+    setWhisperText(e.target.value);
+  }
+}
+['whisper-to', 'whisper-to-drawer', 'whisper-text', 'whisper-text-drawer'].forEach((id) => {
+  document.getElementById(id)?.addEventListener('input', syncWhisperFields);
+});
 
 messagesEl.addEventListener('scroll', () => {
   if (messagesEl.scrollTop < 60) loadOlderHistory();
@@ -355,10 +485,12 @@ textInput.addEventListener('keydown', (e) => {
   }
 });
 
-document.querySelector('.exit-form')?.addEventListener('submit', () => {
-  if (ws?.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({ type: 'leave' }));
-  }
+document.querySelectorAll('.exit-form').forEach((form) => {
+  form.addEventListener('submit', () => {
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'leave' }));
+    }
+  });
 });
 
 textInput.focus();
