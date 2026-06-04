@@ -260,23 +260,35 @@ wss.on('connection', (ws) => {
     }
 
     if (msg.type === 'leave') {
-      handleDisconnect(ws);
+      removeClient(ws, true);
+      return;
     }
   });
 
-  ws.on('close', () => handleDisconnect(ws));
+  ws.on('close', () => removeClient(ws, false));
 });
 
-function handleDisconnect(ws) {
+function isUserOnlineInChannel(name, channel) {
+  const key = name.toLowerCase();
+  for (const [, c] of clients) {
+    if (c.channel === channel && c.name.toLowerCase() === key) return true;
+  }
+  return false;
+}
+
+function removeClient(ws, announceLeave) {
   const client = clients.get(ws);
   if (!client) return;
   clients.delete(ws);
-  emitMessage(client.channel, {
-    time: formatTime(),
-    nick: '***',
-    text: `${client.name} ${leaveVerb(client.gender)} из чата`,
-    system: true,
-  });
+
+  if (announceLeave && !isUserOnlineInChannel(client.name, client.channel)) {
+    emitMessage(client.channel, {
+      time: formatTime(),
+      nick: '***',
+      text: `${client.name} ${leaveVerb(client.gender)} из чата`,
+      system: true,
+    });
+  }
   sendUserList(client.channel);
 }
 

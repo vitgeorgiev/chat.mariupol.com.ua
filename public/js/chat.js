@@ -355,7 +355,7 @@ textInput.addEventListener('keydown', (e) => {
   }
 });
 
-window.addEventListener('beforeunload', () => {
+document.querySelector('.exit-form')?.addEventListener('submit', () => {
   if (ws?.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify({ type: 'leave' }));
   }
