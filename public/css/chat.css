@@ -359,6 +359,11 @@ body.chat-room {
   display: none !important;
 }
 
+.chat-scrim,
+.chat-drawer {
+  display: none !important;
+}
+
 /* ── Mobile (mgch-chat-v1 layout, MGCH colors) ── */
 @media (max-width: 768px) {
   .chat-mobile-only {
@@ -371,6 +376,14 @@ body.chat-room {
 
   .chat-desktop-only {
     display: none !important;
+  }
+
+  .chat-scrim {
+    display: block !important;
+  }
+
+  .chat-drawer {
+    display: flex !important;
   }
 
   body.chat-room {
