@@ -53,24 +53,25 @@
 </aside>
 
 <div class="chat-query">
-  <form id="query-form" class="query-say" onsubmit="return false">
-    <div class="query-say-row">
+  <div class="query-row">
+    <form id="query-form" class="query-main" onsubmit="return false">
       <label class="query-action-label"><input type="checkbox" id="action-check" accesskey="д"> Действие</label>
-      <button type="submit" form="exit-form" class="exit-btn">Выход</button>
-    </div>
-    <input type="text" id="text-input" name="textcache" maxlength="500" class="query-text-input" placeholder="Сообщение..." autocomplete="off">
-    <div class="query-buttons">
-      <input type="submit" value="сказать" class="btn-primary">
-      <input type="reset" id="reset-btn" value="сброс">
-      <input type="button" id="rus-btn" value="→ рус" accesskey="р">
-    </div>
-  </form>
-  <form id="exit-form" class="exit-form" action="/" method="get" hidden></form>
+      <input type="text" id="text-input" name="textcache" maxlength="500" class="query-text-input">
+      <div class="query-buttons">
+        <input type="submit" value="сказать">
+        <input type="reset" id="reset-btn" value="сброс">
+        <input type="button" id="rus-btn" value="-> рус" accesskey="р">
+      </div>
+    </form>
+    <form class="exit-form" action="/" method="get">
+      <input type="submit" value="Выход">
+    </form>
+  </div>
   <form id="whisper-form" class="query-whisper" onsubmit="return false">
-    <span class="whisper-label">На ушко</span>
-    <input type="text" id="whisper-to" maxlength="20" class="whisper-to-input" placeholder="ник">
-    <input type="text" id="whisper-text" maxlength="500" class="whisper-text-input" placeholder="текст">
-    <input type="submit" value="шепнуть" class="btn-whisper">
+    <label>На ушко:</label>
+    <input type="text" id="whisper-to" maxlength="20" class="whisper-to-input">
+    <input type="text" id="whisper-text" maxlength="500" class="whisper-text-input">
+    <input type="submit" value="шепнуть">
   </form>
 </div>
 
