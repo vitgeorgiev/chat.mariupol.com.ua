@@ -25,52 +25,52 @@
       <input type="button" id="channel-go" value="перейти" class="chatInput">
     </div>
   </div>
-  <nav class="header-nav">
-    <a href="#" id="temp-out-link">временно отсутствовать</a>
-    <a href="#">архив сообщений</a>
-    <a href="#">почта</a>
+  <nav class="header-nav" aria-label="Навигация">
+    <a href="#" id="temp-out-link">отсутствовать</a>
     <a href="/settings.html" id="settings-link">настройки</a>
     <a href="/profile.html" id="my-info-link">моя инфа</a>
-    <a href="#">фотогалерея</a>
-    <a href="#">логи модераторов</a>
-    <a href="#">правила чата</a>
-    <a href="#">покер</a>
+    <a href="#">архив</a>
+    <a href="#">почта</a>
+    <a href="#">правила</a>
+    <a href="#" class="nav-secondary">покер</a>
+    <a href="#" class="nav-secondary">фото</a>
+    <a href="#" class="nav-secondary">логи</a>
   </nav>
 </div>
 
 <div class="chat-main">
   <div id="messages" class="chat-output"></div>
-  <div class="chat-names" id="chat-names-panel">
-    <button type="button" id="users-toggle" class="users-toggle" aria-expanded="false">
-      <span id="users-toggle-label">участники</span>
-    </button>
-    <div class="names-title">в <span id="channel-locative">...</span></div>
-    <div id="users"></div>
-    <div id="away-header" class="away-header" hidden>Временно отсутствуют</div>
-    <div id="away-users"></div>
-  </div>
 </div>
 
+<aside class="chat-names" id="chat-names-panel">
+  <button type="button" id="users-toggle" class="users-toggle" aria-expanded="false">
+    <span id="users-toggle-label">участники</span>
+  </button>
+  <div class="names-title">в <span id="channel-locative-side">...</span></div>
+  <div id="users"></div>
+  <div id="away-header" class="away-header" hidden>Временно отсутствуют</div>
+  <div id="away-users"></div>
+</aside>
+
 <div class="chat-query">
-  <div class="query-row">
-    <form id="query-form" class="query-main" onsubmit="return false">
+  <form id="query-form" class="query-say" onsubmit="return false">
+    <div class="query-say-row">
       <label class="query-action-label"><input type="checkbox" id="action-check" accesskey="д"> Действие</label>
-      <input type="text" id="text-input" name="textcache" maxlength="500" class="query-text-input">
-      <div class="query-buttons">
-        <input type="submit" value="сказать">
-        <input type="reset" id="reset-btn" value="сброс">
-        <input type="button" id="rus-btn" value="-> рус" accesskey="р">
-      </div>
-    </form>
-    <form class="exit-form" action="/" method="get">
-      <input type="submit" value="Выход">
-    </form>
-  </div>
+      <button type="submit" form="exit-form" class="exit-btn">Выход</button>
+    </div>
+    <input type="text" id="text-input" name="textcache" maxlength="500" class="query-text-input" placeholder="Сообщение..." autocomplete="off">
+    <div class="query-buttons">
+      <input type="submit" value="сказать" class="btn-primary">
+      <input type="reset" id="reset-btn" value="сброс">
+      <input type="button" id="rus-btn" value="→ рус" accesskey="р">
+    </div>
+  </form>
+  <form id="exit-form" class="exit-form" action="/" method="get" hidden></form>
   <form id="whisper-form" class="query-whisper" onsubmit="return false">
-    <label>На ушко:</label>
-    <input type="text" id="whisper-to" maxlength="20" class="whisper-to-input">
-    <input type="text" id="whisper-text" maxlength="500" class="whisper-text-input">
-    <input type="submit" value="шепнуть">
+    <span class="whisper-label">На ушко</span>
+    <input type="text" id="whisper-to" maxlength="20" class="whisper-to-input" placeholder="ник">
+    <input type="text" id="whisper-text" maxlength="500" class="whisper-text-input" placeholder="текст">
+    <input type="submit" value="шепнуть" class="btn-whisper">
   </form>
 </div>
 

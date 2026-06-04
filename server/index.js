@@ -94,22 +94,52 @@ function broadcast(channel, data, exclude) {
 }
 
 function getUsersInChannel(channel) {
-  const users = [];
+  const seen = new Map();
   for (const [, client] of clients) {
-    if (client.channel === channel) {
-      users.push({
-        name: client.name,
-        gender: client.gender,
-        color: client.color,
-        away: client.away,
-      });
-    }
+    if (client.channel !== channel) continue;
+    const key = client.name.toLowerCase();
+    seen.set(key, {
+      name: client.name,
+      gender: client.gender,
+      color: client.color,
+      away: client.away,
+    });
   }
-  return users.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+  return [...seen.values()].sort((a, b) => a.name.localeCompare(b.name, 'ru'));
 }
 
-function sendUserList(channel) {
-  broadcast(channel, { type: 'users', users: getUsersInChannel(channel) });
+function sendUserList(channel, exclude) {
+  broadcast(channel, { type: 'users', users: getUsersInChannel(channel) }, exclude);
+}
+
+function evictDuplicateSessions(name, channel, keepWs) {
+  const key = name.toLowerCase();
+  for (const [ws, client] of clients) {
+    if (ws === keepWs) continue;
+    if (client.channel === channel && client.name.toLowerCase() === key) {
+      clients.delete(ws);
+      try {
+        ws.close();
+      } catch { /* ignore */ }
+    }
+  }
+}
+
+function announceJoin(channel, name, gender) {
+  const entry = makeMessage({
+    channel,
+    nick: '***',
+    text: `${name} ${joinVerb(gender)} в чат`,
+    system: true,
+  });
+  addToHistory(entry);
+  emitMessage(channel, {
+    time: entry.time,
+    nick: entry.nick,
+    text: entry.text,
+    system: true,
+  });
+  return entry;
 }
 
 function makeMessage({ channel, nick, text, action, system, color, gender, msgColor, coloredContent }) {
@@ -176,6 +206,8 @@ wss.on('connection', (ws) => {
       const gender = normalizeGender(prefs.gender ?? msg.gender);
       const color = normalizeColor(prefs.color ?? msg.color);
 
+      evictDuplicateSessions(trimmed, channel, ws);
+
       clients.set(ws, {
         name: trimmed,
         channel,
@@ -188,6 +220,10 @@ wss.on('connection', (ws) => {
       });
 
       touchLastSeen(trimmed);
+
+      if (msg.announce) {
+        announceJoin(channel, trimmed, gender);
+      }
 
       const history = getChannelHistory(channel);
       ws.send(JSON.stringify({
@@ -205,14 +241,6 @@ wss.on('connection', (ws) => {
           coloredContent: !!prefs.coloredContent,
         },
       }));
-      if (msg.announce) {
-        emitMessage(channel, {
-          time: formatTime(),
-          nick: '***',
-          text: `${trimmed} ${joinVerb(gender)} в чат`,
-          system: true,
-        });
-      }
       sendUserList(channel);
       return;
     }
@@ -248,10 +276,12 @@ wss.on('connection', (ws) => {
         msgColor: entry.msgColor,
         coloredContent: entry.coloredContent,
       });
+      sendUserList(client.channel);
     }
 
     if (msg.type === 'whisper' && msg.to?.trim() && msg.text?.trim()) {
       sendWhisper(client.channel, client, msg.to, msg.text);
+      sendUserList(client.channel);
     }
 
     if (msg.type === 'away') {

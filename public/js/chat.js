@@ -35,7 +35,7 @@ if (!name || !channel) {
 }
 
 document.title = `${CHANNEL_NAMES[channel] || 'Чат'} — Мариупольский городской чат V2.31`;
-document.getElementById('channel-locative').textContent =
+document.getElementById('channel-locative-side').textContent =
   CHANNEL_NAMES_LOCATIVE[channel] || 'чате';
 document.getElementById('channel-select').value = channel;
 document.getElementById('my-info-link').href =
@@ -86,9 +86,9 @@ function connect() {
       historyOldestTs = data.oldestTs ?? historyOldestTs;
       historyLoading = false;
     }
+    if (data.type === 'users') updateUsers(data.users);
     if (data.type === 'message') addMessage(data);
     if (data.type === 'whisper') addWhisper(data);
-    if (data.type === 'users') updateUsers(data.users);
   };
 
   ws.onclose = () => setTimeout(connect, 2000);
